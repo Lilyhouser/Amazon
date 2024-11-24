@@ -1,7 +1,7 @@
 let productsHTML = '';
 
 products.forEach((product) => {
-    productsHTML += `
+  productsHTML += `
         <div class="product-container">
           <div class="product-image-container">
             <img class="product-image"
@@ -46,7 +46,7 @@ products.forEach((product) => {
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${product.id}">
             Add to Cart
           </button>
         </div>
@@ -54,3 +54,30 @@ products.forEach((product) => {
 });
 
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
+
+document.querySelectorAll('.js-add-to-cart').forEach((buttonElement) => {
+  buttonElement.addEventListener('click', () => {
+    const productId = buttonElement.dataset.productId;
+
+    let matchingItem;
+
+    cart.forEach((pro) => {
+      if (pro.productId === productId) {
+        matchingItem = pro;
+      }
+    });
+
+    if (matchingItem) {
+      matchingItem.quantity++;
+    } else {
+      cart.push({
+        productId: productId,
+        quantity: 1
+      });
+    }
+    console.log(cart);
+  });
+});
+
+//dataset is html attribute that is added to attach some information of element.
+//it starts with: data-....
