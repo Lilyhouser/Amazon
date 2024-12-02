@@ -6,25 +6,25 @@ import { deliveryOption, getDeliveryOption } from "../../data/deliveryOption.js"
 import { renderPaymentSummary } from "./paymentSummary.js";
 
 export function renderOrderSummary() {
-  let cartSummaryHTML = '';
+    let cartSummaryHTML = '';
 
-  document.querySelector('.js-return-to-home-link').innerHTML = `${calTotalInCart()} items`;
+    document.querySelector('.js-return-to-home-link').innerHTML = `${calTotalInCart()} items`;
 
-  cart.forEach((cartItem) => {
-    const productId = cartItem.productId;
+    cart.forEach((cartItem) => {
+        const productId = cartItem.productId;
 
-    const matchingProduct = getProduct(productId);
+        const matchingProduct = getProduct(productId);
 
-    const deliveryOptionId = cartItem.deliveryOptionId;
+        const deliveryOptionId = cartItem.deliveryOptionId;
 
-    let deliveryOpt = getDeliveryOption(deliveryOptionId);
+        let deliveryOpt = getDeliveryOption(deliveryOptionId);
 
-    const today = dayjs();
-    const deliveryDate = today.add(deliveryOpt.deliveryDays, 'days');
-    const dateString = deliveryDate.format('dddd, MMMM D');
+        const today = dayjs();
+        const deliveryDate = today.add(deliveryOpt.deliveryDays, 'days');
+        const dateString = deliveryDate.format('dddd, MMMM D');
 
-    cartSummaryHTML +=
-      `
+        cartSummaryHTML +=
+            `
           <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
               <div class="delivery-date">
                 Delivery date: ${dateString}
@@ -64,19 +64,19 @@ export function renderOrderSummary() {
               </div>
             </div>
       `;
-  });
+    });
 
-  function deliveryOptionsHTML(matchingProductId, cartItem) {
-    let html = '';
-    deliveryOption.forEach((deliveryOpt) => {
-      const today = dayjs();
-      const deliveryDate = today.add(deliveryOpt.deliveryDays, 'days');
-      const dateString = deliveryDate.format('dddd, MMMM D');
-      const priceString = deliveryOpt.priceCents === 0?'FREE Shipping':`$${formatCurrency(deliveryOpt.priceCents)} - shipping`;
-      
-      const isChecked = deliveryOpt.id === cartItem.deliveryOptionId;
+    function deliveryOptionsHTML(matchingProductId, cartItem) {
+        let html = '';
+        deliveryOption.forEach((deliveryOpt) => {
+            const today = dayjs();
+            const deliveryDate = today.add(deliveryOpt.deliveryDays, 'days');
+            const dateString = deliveryDate.format('dddd, MMMM D');
+            const priceString = deliveryOpt.priceCents === 0 ? 'FREE Shipping' : `$${formatCurrency(deliveryOpt.priceCents)} - shipping`;
 
-      html += `
+            const isChecked = deliveryOpt.id === cartItem.deliveryOptionId;
+
+            html += `
         <div class="delivery-option js-delivery-option" data-product-id=${matchingProductId} data-delivery-option-id=${deliveryOpt.id}>
           <input type="radio" class="delivery-option-input"
             ${isChecked ? 'checked' : ''}
@@ -91,30 +91,30 @@ export function renderOrderSummary() {
           </div>
         </div>
       `;
+        });
+        return html;
+    }
+
+    document.querySelector('.order-summary').innerHTML = cartSummaryHTML;
+
+    document.querySelectorAll('.js-delete-link').forEach((link) => {
+        link.addEventListener('click', () => {
+            const productId = link.dataset.productId;
+            removeFromCart(productId);
+
+            const removeProduct = document.querySelector(`.js-cart-item-container-${productId}`).remove();
+            document.querySelector('.js-return-to-home-link').innerHTML = `${calTotalInCart()} items`;
+
+            renderPaymentSummary();
+        });
     });
-    return html;
-  }
 
-  document.querySelector('.order-summary').innerHTML = cartSummaryHTML;
-
-  document.querySelectorAll('.js-delete-link').forEach((link) => {
-    link.addEventListener('click', () => {
-      const productId = link.dataset.productId;
-      removeFromCart(productId);
-
-      const removeProduct = document.querySelector(`.js-cart-item-container-${productId}`).remove();
-      document.querySelector('.js-return-to-home-link').innerHTML = `${calTotalInCart()} items`;
-
-      renderPaymentSummary();
+    document.querySelectorAll('.js-delivery-option').forEach((element) => {
+        element.addEventListener('click', () => {
+            const { productId, deliveryOptionId } = element.dataset;
+            updateDeliveryOption(productId, deliveryOptionId);
+            renderOrderSummary();
+            renderPaymentSummary();
+        });
     });
-  });
-
-  document.querySelectorAll('.js-delivery-option').forEach((element) => {
-    element.addEventListener('click', () => {
-      const {productId, deliveryOptionId} = element.dataset;
-      updateDeliveryOption(productId, deliveryOptionId);
-      renderOrderSummary();
-      renderPaymentSummary();
-    });
-  });
 }

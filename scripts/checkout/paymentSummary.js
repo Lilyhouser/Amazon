@@ -1,6 +1,7 @@
 import { cart } from "../../data/cart.js";
 import { getProduct } from "../../data/products.js";
 import { formatCurrency } from "../utilis/money.js";
+import { calTotalInCart } from "../../data/cart.js";
 import { deliveryOption, getDeliveryOption } from "../../data/deliveryOption.js";
 
 export function renderPaymentSummary() {
@@ -25,7 +26,7 @@ export function renderPaymentSummary() {
         </div>
 
         <div class="payment-summary-row">
-            <div>Items (3):</div>
+            <div>Items (${calTotalInCart()}):</div>
             <div class="payment-summary-money">$${formatCurrency(productPriceCents)}</div>
         </div>
 
