@@ -1,12 +1,18 @@
-export let cart = JSON.parse(localStorage.getItem('cart')) || [{
-  productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-  quantity: 2,
-  deliveryOptionId: '1'
-}, {
-  productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
-  quantity: 1,
-  deliveryOptionId: '2'
-}];
+export let cart;
+
+loadFromStorage();
+
+export function loadFromStorage(){
+  cart = JSON.parse(localStorage.getItem('cart')) || [{
+    productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+    quantity: 2,
+    deliveryOptionId: '1'
+  }, {
+    productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+    quantity: 1,
+    deliveryOptionId: '2'
+  }];  
+}
 
 export function calTotalInCart(){
   let sum = 0;
@@ -15,8 +21,6 @@ export function calTotalInCart(){
 }
 
 export function addToCart(productId) {
-  const itemQuantity = Number(document.querySelector(`.js-product-quantity-${productId}`).value);
-
   let matchingItem;
 
   cart.forEach((cartItem) => {
@@ -24,6 +28,9 @@ export function addToCart(productId) {
       matchingItem = cartItem;
     }
   });
+
+  const itemQuantity = Number(document.querySelector(`.js-product-quantity-${productId}`).value);
+  console.log(itemQuantity);
 
   if (matchingItem) {
     matchingItem.quantity += itemQuantity;
