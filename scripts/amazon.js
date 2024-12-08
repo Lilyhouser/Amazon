@@ -1,13 +1,16 @@
 import { cart, addToCart } from "../data/cart.js";
-import { products } from "../data/products.js";
+import { products, loadProducts } from "../data/products.js";
 import { formatCurrency } from "./utilis/money.js";
 
+loadProducts(renderProductsGrid);
 updateCartQuantity();
 
-let productsHTML = '';
+function renderProductsGrid() {
 
-products.forEach((product) => {
-  productsHTML += `
+  let productsHTML = '';
+
+  products.forEach((product) => {
+    productsHTML += `
         <div class="product-container">
           <div class="product-image-container">
             <img class="product-image"
@@ -59,44 +62,45 @@ products.forEach((product) => {
           </button>
         </div>
     `;
-});
-
-document.querySelector('.js-products-grid').innerHTML = productsHTML;
-
-document.querySelectorAll('.js-add-to-cart').forEach((buttonElement, index) => {
-  let timeoutID = '';
-
-  buttonElement.addEventListener('click', () => {
-    const productId = buttonElement.dataset.productId;
-
-    //make 'Added' opacity to 1
-    document.querySelector(`.js-added-to-cart-${productId}`).style.opacity = 1;
-
-    if (!(timeoutID === '')) {
-      clearTimeout(timeoutID);
-    }
-    timeoutID = setTimeout(() => {
-      document.querySelector(`.js-added-to-cart-${productId}`).style.opacity = 0;
-      timeoutID = '';
-    }, 1500);
-
-    addToCart(productId);
-
-    updateCartQuantity();
-
-  });
-});
-
-//dataset is html attribute that is added to attach some information of element.
-//it starts with: data-....
-
-
-function updateCartQuantity() {
-  let cartQuantity = 0;
-
-  cart.forEach((cartItem) => {
-    cartQuantity += cartItem.quantity;
   });
 
-  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+  document.querySelector('.js-products-grid').innerHTML = productsHTML;
+
+  document.querySelectorAll('.js-add-to-cart').forEach((buttonElement, index) => {
+    let timeoutID = '';
+
+    buttonElement.addEventListener('click', () => {
+      const productId = buttonElement.dataset.productId;
+
+      //make 'Added' opacity to 1
+      document.querySelector(`.js-added-to-cart-${productId}`).style.opacity = 1;
+
+      if (!(timeoutID === '')) {
+        clearTimeout(timeoutID);
+      }
+      timeoutID = setTimeout(() => {
+        document.querySelector(`.js-added-to-cart-${productId}`).style.opacity = 0;
+        timeoutID = '';
+      }, 1500);
+
+      addToCart(productId);
+
+      updateCartQuantity();
+
+    });
+  });
+
+  //dataset is html attribute that is added to attach some information of element.
+  //it starts with: data-....
+
+
+  function updateCartQuantity() {
+    let cartQuantity = 0;
+
+    cart.forEach((cartItem) => {
+      cartQuantity += cartItem.quantity;
+    });
+
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+  }
 }
