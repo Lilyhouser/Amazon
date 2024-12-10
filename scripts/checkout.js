@@ -4,6 +4,7 @@ import { loadProducts, loadProductsFetch } from "../data/products.js";
 import { loadCart } from "../data/cart.js";
 //import '../data/cart-class.js';
 // import '../data/backend-practice.js';
+loadPage();
 
 async function loadPage() {
     try {
@@ -42,7 +43,6 @@ async function loadPage() {
 //     renderPaymentSummary();
 // }
 
-loadPage();
 /*
 Promise.all([
     loadProductsFetch(),
