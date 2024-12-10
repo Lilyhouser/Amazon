@@ -91,16 +91,15 @@ function renderProductsGrid() {
   });
 
   //dataset is html attribute that is added to attach some information of element.
-  //it starts with: data-....
+  //it starts with: data-....  
+}
 
+function updateCartQuantity() {
+  let cartQuantity = 0;
 
-  function updateCartQuantity() {
-    let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
 
-    cart.forEach((cartItem) => {
-      cartQuantity += cartItem.quantity;
-    });
-
-    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-  }
+  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
 }
